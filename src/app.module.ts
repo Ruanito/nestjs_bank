@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entity/user.entity';
 
 @Module({
   imports: [
@@ -17,9 +19,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
-        logging: ['query']
+        entities: [User],
+        logging: ['query'],
       }),
-    })
+    }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
