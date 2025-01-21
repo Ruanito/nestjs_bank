@@ -55,5 +55,14 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Set up envs
+        run: cp .env.test .env
+
+      - name: Start containers
+        run: docker compose up -d --build
+
+      - name: Run migration
+        run: yarn migration:run
+
       - name: Run tests
         run: yarn test
