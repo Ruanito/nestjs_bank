@@ -37,6 +37,7 @@ export class AuthService {
   async saveUser(registerDTO: RegisterDTO): Promise<void> {
     const user = await this.userRepository.findOneBy({
       username: registerDTO.username,
+      active: true,
     });
 
     if (user) {
