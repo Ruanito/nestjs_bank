@@ -9,7 +9,7 @@ import {
   Get,
 } from '@nestjs/common';
 import { RegisterDTO } from '../dtos';
-import { AuthService } from '../sevices';
+import { AuthService } from '../services';
 import { JwtAuthGuard, LocalAuthGuard } from '../shered';
 
 @Controller('auth')
