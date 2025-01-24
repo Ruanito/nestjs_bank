@@ -6,6 +6,8 @@ import { User } from '../../users/entity';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as request from 'supertest';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { Account } from '../../accounts/entities';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -15,6 +17,7 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
+        EventEmitterModule.forRoot(),
         AuthModule,
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
@@ -26,7 +29,7 @@ describe('AuthController', () => {
             username: configService.get<string>('POSTGRES_USER'),
             password: configService.get<string>('POSTGRES_PASSWORD'),
             database: configService.get<string>('POSTGRES_DB'),
-            entities: [User],
+            entities: [User, Account],
           }),
         }),
       ],

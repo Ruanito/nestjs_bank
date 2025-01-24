@@ -2,14 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Account } from '../../accounts/entities';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ unique: true })
   username: string;
@@ -19,6 +21,9 @@ export class User {
 
   @Column({ default: true })
   active: boolean;
+
+  @OneToMany(() => Account, (account) => account.user)
+  accounts: Account[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
