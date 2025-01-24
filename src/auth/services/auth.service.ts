@@ -5,6 +5,8 @@ import { User } from '../../users/entity';
 import { RegisterDTO } from '../dtos';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserEvent } from '../../users/shered';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +14,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -45,10 +48,12 @@ export class AuthService {
     }
 
     const hashPassword = await this.hashPassword(registerDTO.password);
-    await this.userRepository.save({
+    const userSaved = await this.userRepository.save({
       username: registerDTO.username,
       password: hashPassword,
     });
+
+    this.eventEmitter.emit('user.created', new UserEvent(userSaved.id));
   }
 
   private async hashPassword(password: string): Promise<string> {
